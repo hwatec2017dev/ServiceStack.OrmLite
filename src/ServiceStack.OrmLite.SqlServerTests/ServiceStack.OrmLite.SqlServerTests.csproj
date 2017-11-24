@@ -15,7 +15,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="NUnit" Version="3.9.0" />
-    <Reference Include="..\..\lib\net45\ServiceStack.Interfaces.dll" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net46' ">
@@ -43,6 +42,7 @@
     <Reference Include="..\..\lib\net45\ServiceStack.Client.dll" />
     <Reference Include="..\..\lib\net45\ServiceStack.Common.dll" />
     <Reference Include="..\..\lib\net45\ServiceStack.dll" />
+    <Reference Include="..\..\lib\net45\ServiceStack.Interfaces.dll" />
   </ItemGroup>
 
 </Project>
