@@ -14,7 +14,7 @@ using ServiceStack.Text;
 
 namespace ServiceStack.OrmLite
 {
-    public abstract partial class SqlExpression<T> : ISqlExpression, IHasUntypedSqlExpression
+    public abstract partial class SqlExpression<T> : ISqlExpression, IHasUntypedSqlExpression, IHasDialectProvider
     {
         public const string TrueLiteral = "(1=1)";
         public const string FalseLiteral = "(1=0)";
@@ -111,7 +111,7 @@ namespace ServiceStack.OrmLite
         /// set the specified selectExpression.
         /// </summary>
         /// <param name='selectExpression'>
-        /// raw Select expression: "Select SomeField1, SomeField2 from SomeTable"
+        /// raw Select expression: "SomeField1, SomeField2 from SomeTable"
         /// </param>
         public virtual SqlExpression<T> Select(string selectExpression)
         {
@@ -120,15 +120,30 @@ namespace ServiceStack.OrmLite
             return UnsafeSelect(selectExpression);
         }
 
-        public virtual SqlExpression<T> UnsafeSelect(string rawSelect)
+        /// <summary>
+        /// set the specified DISTINCT selectExpression.
+        /// </summary>
+        /// <param name='selectExpression'>
+        /// raw Select expression: "SomeField1, SomeField2 from SomeTable"
+        /// </param>
+        public virtual SqlExpression<T> SelectDistinct(string selectExpression)
+        {
+            selectExpression?.SqlVerifyFragment();
+
+            return UnsafeSelect(selectExpression, distinct:true);
+        }
+
+        public virtual SqlExpression<T> UnsafeSelect(string rawSelect) => UnsafeSelect(rawSelect, distinct: false);
+
+        public virtual SqlExpression<T> UnsafeSelect(string rawSelect, bool distinct)
         {
             if (string.IsNullOrEmpty(rawSelect))
             {
-                BuildSelectExpression(string.Empty, false);
+                BuildSelectExpression(string.Empty, distinct: distinct);
             }
             else
             {
-                this.selectExpression = "SELECT " + rawSelect;
+                this.selectExpression = "SELECT " + (distinct ? "DISTINCT " : "") + rawSelect;
                 this.CustomSelect = true;
                 OnlyFields = null;
             }
@@ -141,7 +156,17 @@ namespace ServiceStack.OrmLite
         /// <param name='fields'>
         /// Matching Fields: "SomeField1, SomeField2"
         /// </param>
-        public virtual SqlExpression<T> Select(string[] fields)
+        public virtual SqlExpression<T> Select(string[] fields) => Select(fields, distinct: false);
+
+        /// <summary>
+        /// Set the specified DISTINCT selectExpression using matching fields.
+        /// </summary>
+        /// <param name='fields'>
+        /// Matching Fields: "SomeField1, SomeField2"
+        /// </param>
+        public virtual SqlExpression<T> SelectDistinct(string[] fields) => Select(fields, distinct: true);
+
+        internal virtual SqlExpression<T> Select(string[] fields, bool distinct)
         {
             if (fields == null || fields.Length == 0)
                 return Select(string.Empty);
@@ -192,7 +217,7 @@ namespace ServiceStack.OrmLite
                 sb.Append(qualifiedName);
             }
 
-            UnsafeSelect(StringBuilderCache.ReturnAndFree(sb));
+            UnsafeSelect(StringBuilderCache.ReturnAndFree(sb), distinct:distinct);
             OnlyFields = new HashSet<string>(fieldsList, StringComparer.OrdinalIgnoreCase);
 
             return this;
@@ -1647,9 +1672,9 @@ namespace ServiceStack.OrmLite
             {
                 if (m.Member.DeclaringType.IsNullableType())
                 {
-                    if (m.Member.Name == "Value") //Can't use C# 6 yet: nameof(Nullable<bool>.Value)
+                    if (m.Member.Name == nameof(Nullable<bool>.Value))
                         return Visit(m.Expression);
-                    if (m.Member.Name == "HasValue") //nameof(Nullable<bool>.HasValue)
+                    if (m.Member.Name == nameof(Nullable<bool>.HasValue))
                     {
                         var doesNotEqualNull = Expression.MakeBinary(ExpressionType.NotEqual, m.Expression, Expression.Constant(null));
                         return Visit(doesNotEqualNull); // Nullable<T>.HasValue is equivalent to "!= null"
@@ -2455,6 +2480,11 @@ namespace ServiceStack.OrmLite
 
         string ToSelectStatement();
         string SelectInto<TModel>();
+    }
+
+    public interface IHasDialectProvider
+    {
+        IOrmLiteDialectProvider DialectProvider { get; }
     }
 
     public class PartialSqlString
