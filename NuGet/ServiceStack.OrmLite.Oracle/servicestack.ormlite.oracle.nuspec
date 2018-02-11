@@ -22,7 +22,7 @@
         <dependency id="dotConnect.Express.for.Oracle" version="8.3.115" />
         <dependency id="odp.net.x64" version="112.3.20" />
         <dependency id="odp.net.x86" version="112.3.20" />
-        <dependency id="ServiceStack.OrmLite" version="5.0.0" />
+        <dependency id="ServiceStack.OrmLite" version="5.1.0" />
       </group>
     </dependencies>
   </metadata> 

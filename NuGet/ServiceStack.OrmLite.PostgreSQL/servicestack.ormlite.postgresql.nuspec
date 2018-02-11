@@ -20,11 +20,11 @@
     <dependencies>
       <group targetFramework="net45">
         <dependency id="Npgsql" version="[3.2.6, )" />
-        <dependency id="ServiceStack.OrmLite" version="5.0.0" />
+        <dependency id="ServiceStack.OrmLite" version="5.1.0" />
       </group>
       <group targetFramework=".netstandard2.0">
         <dependency id="Npgsql" version="[3.2.6, )" />
-        <dependency id="ServiceStack.OrmLite" version="5.0.0" />
+        <dependency id="ServiceStack.OrmLite" version="5.1.0" />
       </group>
     </dependencies>
   </metadata> 

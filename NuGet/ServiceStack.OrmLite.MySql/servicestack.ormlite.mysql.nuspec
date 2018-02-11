@@ -20,11 +20,11 @@
     <dependencies>
       <group targetFramework="net45">
         <dependency id="MySql.Data" version="[6.9.10, )" />
-        <dependency id="ServiceStack.OrmLite" version="5.0.0" />
+        <dependency id="ServiceStack.OrmLite" version="5.1.0" />
       </group>
       <group targetFramework=".netstandard2.0">
         <dependency id="MySql.Data" version="[8.0.9-dmr, )" />
-        <dependency id="ServiceStack.OrmLite" version="5.0.0" />
+        <dependency id="ServiceStack.OrmLite" version="5.1.0" />
       </group>
     </dependencies>
   </metadata> 

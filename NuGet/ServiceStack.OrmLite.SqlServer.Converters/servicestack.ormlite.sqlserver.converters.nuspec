@@ -19,7 +19,7 @@
     <dependencies>
       <group targetFramework="net45">
         <dependency id="Microsoft.SqlServer.Types" version="[14.0.314.76, )" />
-        <dependency id="ServiceStack.OrmLite.SqlServer" version="5.0.0" />
+        <dependency id="ServiceStack.OrmLite.SqlServer" version="5.1.0" />
       </group>
     </dependencies>
   </metadata> 
